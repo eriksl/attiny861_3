@@ -1,0 +1,30 @@
+MODEL 6 (ATTINY861A), VERSION 3, REVISION 0
+
+*** COMMANDS ***
+
+*** REPLY ***
+
+*** FEATURES ***
+
+	pin		name
+
+	1		PB0/MOSI	mosi 
+	2		PB1/MISO	miso 
+	3		PB2/SCK		sck
+	4		PB3						d+
+	5		VCC			VCC			
+	6		GND			GND		
+	7		PB4/XTAL1					xtal1
+	8		PB5/XTAL2					xtal2
+	9		PB6/INT0				d-
+	10		PB7/RESET	reset
+	11		PA7
+	12		PA6
+	13		PA5
+	14		PA4
+	15		AVCC		AVCC
+	16		AGND		AGND
+	17		PA3
+	18		PA2
+	19		PA1
+	20		PA0
