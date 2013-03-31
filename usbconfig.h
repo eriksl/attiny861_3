@@ -25,15 +25,17 @@ section at the end of this file).
 
 /* ---------------------------- Hardware Config ---------------------------- */
 
-#define USB_CFG_IOPORTNAME      D
+#define USB_CFG_IOPORTNAME      B
 /* This is the port where the USB bus is connected. When you configure it to
  * "B", the registers PORTB, PINB and DDRB will be used.
  */
-#define USB_CFG_DMINUS_BIT      4
+#define USB_CFG_DMINUS_BIT      6
+// B6=INT0
 /* This is the bit number in USB_CFG_IOPORT where the USB D- line is connected.
  * This may be any bit in the port.
  */
-#define USB_CFG_DPLUS_BIT       2
+#define USB_CFG_DPLUS_BIT       3
+// B3
 /* This is the bit number in USB_CFG_IOPORT where the USB D+ line is connected.
  * This may be any bit in the port. Please note that D+ must also be connected
  * to interrupt pin INT0! [You can also use other interrupts, see section
@@ -74,7 +76,7 @@ section at the end of this file).
 
 /* --------------------------- Functional Range ---------------------------- */
 
-#define USB_CFG_HAVE_INTRIN_ENDPOINT    0
+#define USB_CFG_HAVE_INTRIN_ENDPOINT    1
 /* Define this to 1 if you want to compile a version with two endpoints: The
  * default control endpoint 0 and an interrupt-in endpoint (any other endpoint
  * number).
@@ -95,7 +97,7 @@ section at the end of this file).
  * Since the token is toggled BEFORE sending any data, the first packet is
  * sent with the oposite value of this configuration!
  */
-#define USB_CFG_IMPLEMENT_HALT          0
+#define USB_CFG_IMPLEMENT_HALT          1
 /* Define this to 1 if you also want to implement the ENDPOINT_HALT feature
  * for endpoint 1 (interrupt endpoint). Although you may not need this feature,
  * it is required by the standard. We have made it a config option because it
@@ -118,7 +120,7 @@ section at the end of this file).
 /* Define this to 1 if the device has its own power supply. Set it to 0 if the
  * device is powered from the USB bus.
  */
-#define USB_CFG_MAX_BUS_POWER           100
+#define USB_CFG_MAX_BUS_POWER           150
 /* Set this variable to the maximum USB bus power consumption of your device.
  * The value is in milliamperes. [It will be divided by two since USB
  * communicates power requirements in units of 2 mA.]
@@ -150,7 +152,7 @@ section at the end of this file).
  * where the driver's constants (descriptors) are located. Or in other words:
  * Define this to 1 for boot loaders on the ATMega128.
  */
-#define USB_CFG_LONG_TRANSFERS          0
+#define USB_CFG_LONG_TRANSFERS          1
 /* Define this to 1 if you want to send/receive blocks of more than 254 bytes
  * in a single control-in or control-out transfer. Note that the capability
  * for long transfers increases the driver size.
@@ -171,7 +173,7 @@ section at the end of this file).
 /* This macro (if defined) is executed when a USB SET_ADDRESS request was
  * received.
  */
-#define USB_COUNT_SOF                   0
+#define USB_COUNT_SOF                   1
 /* define this macro to 1 if you need the global variable "usbSofCount" which
  * counts SOF packets. This feature requires that the hardware interrupt is
  * connected to D- instead of D+.
@@ -203,11 +205,11 @@ section at the end of this file).
  * usbFunctionWrite(). Use the global usbCurrentDataToken and a static variable
  * for each control- and out-endpoint to check for duplicate packets.
  */
-#define USB_CFG_HAVE_MEASURE_FRAME_LENGTH   0
+#define USB_CFG_HAVE_MEASURE_FRAME_LENGTH   1
 /* define this macro to 1 if you want the function usbMeasureFrameLength()
  * compiled in. This function can be used to calibrate the AVR's RC oscillator.
  */
-#define USB_USE_FAST_CRC                0
+#define USB_USE_FAST_CRC                1
 /* The assembler module has two implementations for the CRC algorithm. One is
  * faster, the other is smaller. This CRC routine is only used for transmitted
  * messages where timing is not critical. The faster routine needs 31 cycles

@@ -1,14 +1,15 @@
 MCU			=		attiny861
+MCUSPEED	=		16500000
 PROGRAMMER	=		dragon_isp
 PRGFLAGS	=		-b 0 -P usb
 
 PROGRAM		=		main
-OBJFILES	=		ioports.o pwm_timer1.o watchdog.o main.o
-HEADERS		=		ioports.h pwm_timer1.h watchdog.h
+OBJFILES	=		usbdrv/usbdrv.o usbdrv/usbdrvasm.o usbdrv/oddebug.o main.o
+HEADERS		=		usbconfig.h usbdrv/oddebug.h usbdrv/usbdrv.h usbdrv/usbportability.h
 HEXFILE		=		$(PROGRAM).hex
 ELFFILE		=		$(PROGRAM).elf
 PROGRAMMED	=		.programmed
-CFLAGS		=		-Wall -Winline -O3 -mmcu=$(MCU) -DF_CPU=1000000UL \
+CFLAGS		=		-Iusbdrv -I. -Wall -Winline -O3 -mmcu=$(MCU) -DF_CPU=$(MCUSPEED)UL \
 					-fpack-struct -funroll-loops -funit-at-a-time -fno-keep-static-consts \
 					-frename-registers
 LDFLAGS		=		-Wall -mmcu=$(MCU)
@@ -23,6 +24,10 @@ hex:				$(HEXFILE)
 
 $(PROGRAM).o:		$(PROGRAM).c $(HEADERS)
 
+%.o:				%.S
+					@echo "AS $< -> $@"
+					@avr-gcc -x assembler-with-cpp -c $(CFLAGS) $< -o $@
+
 %.o:				%.c
 					@echo "CC $< -> $@"
 					@avr-gcc -c $(CFLAGS) $< -o $@
@@ -30,9 +35,6 @@ $(PROGRAM).o:		$(PROGRAM).c $(HEADERS)
 %.s:				%.c
 					@echo "CC (ASM) $< -> $@"
 					@avr-gcc -S $(CFLAGS) $< -o $@
-
-ioports.o:			ioports.h
-watchdog.o:			watchdog.h
 
 $(ELFFILE):			$(OBJFILES)
 					@echo "LD $(OBJFILES) -> $@"
