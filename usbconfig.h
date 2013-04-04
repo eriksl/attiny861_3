@@ -383,4 +383,9 @@ section at the end of this file).
 /* #define USB_INTR_PENDING_BIT    INTF0 */
 /* #define USB_INTR_VECTOR         INT0_vect */
 
+#ifndef __ASSEMBLER__
+extern void usbEventResetReady(void);
+#endif
+#define USB_RESET_HOOK(isReset)         if(!isReset){usbEventResetReady();}
+
 #endif /* __usbconfig_h_included__ */

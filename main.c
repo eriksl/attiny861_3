@@ -7,6 +7,53 @@
 #include "usbdrv.h"
 #include "oddebug.h"
 
+static void calibrateOscillator(void)
+{
+	uint8_t		step = 128;
+	uint8_t		trialValue = 0, optimumValue;
+	uint16_t	x, optimumDev, targetValue = (unsigned)(1499 * (double)F_CPU / 10.5e6 + 0.5);
+ 
+	/* do a binary search: */
+
+	do
+	{
+		OSCCAL = trialValue + step;
+		x = usbMeasureFrameLength();	// proportional to current real frequency
+		if(x < targetValue)				// frequency still too low
+			trialValue += step;
+		step >>= 1;
+	}
+	while(step > 0);
+
+	/* We have a precision of +/- 1 for optimum OSCCAL here */
+	/* now do a neighborhood search for optimum value */
+
+	optimumValue	= trialValue;
+	optimumDev		= x; // this is certainly far away from optimum
+
+	for(OSCCAL = trialValue - 1; OSCCAL <= trialValue + 1; OSCCAL++)
+	{
+		x = usbMeasureFrameLength() - targetValue;
+
+		if(x < 0)
+			x = -x;
+		if(x < optimumDev)
+		{
+			optimumDev = x;
+			optimumValue = OSCCAL;
+		}
+	}
+
+	OSCCAL = optimumValue;
+}
+ 
+void usbEventResetReady(void)
+{
+	cli(); // usbMeasureFrameLength() counts CPU cycles, so disable interrupts.
+	calibrateOscillator();
+	sei();
+}
+
 usbMsgLen_t usbFunctionSetup(uchar data[8])
 {
 	//usbRequest_t	*rq = (void *)data;
