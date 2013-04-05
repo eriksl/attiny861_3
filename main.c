@@ -64,6 +64,9 @@ int main(void)
 {
 	cli();
 
+	DDRA = 0xff;
+	PORTA = 0x00;
+
 	PRR =		(0 << 7)		|
 				(0 << 6)		|	// reserved
 				(0 << 5)		|
@@ -73,16 +76,27 @@ int main(void)
 				(1 << PRUSI)	|	// usi
 				(1 << PRADC);		// adc / analog comperator
 
+	PORTA |= _BV(0);
+
 	set_sleep_mode(SLEEP_MODE_IDLE);
 
+	PORTA |= _BV(1);
+
 	odDebugInit();
+	PORTA |= _BV(2);
 	DBG1(0x00, 0, 0);
 	usbInit();
+	PORTA |= _BV(3);
 	usbDeviceDisconnect();
+	PORTA |= _BV(4);
 	_delay_ms(250);
+	PORTA |= _BV(5);
 	usbDeviceConnect();
+	PORTA |= _BV(6);
 
 	sei();
+
+	PORTA |= _BV(7);
 
 	DBG1(0x01, 0, 0);
 
