@@ -71,8 +71,8 @@ int main(void)
 				(0 << 6)		|	// reserved
 				(0 << 5)		|
 				(0 << 4)		|
-				(0 << PRTIM1)	|	// timer1
-				(0 << PRTIM0)	|	// timer0
+				(1 << PRTIM1)	|	// timer1
+				(1 << PRTIM0)	|	// timer0
 				(1 << PRUSI)	|	// usi
 				(1 << PRADC);		// adc / analog comperator
 
@@ -104,6 +104,7 @@ int main(void)
 	{
 		DBG1(0x02, 0, 0);
 		usbPoll();
+		sleep_mode();
 	}
 
 	return(0);
